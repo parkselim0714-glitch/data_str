@@ -166,7 +166,7 @@ int main(void) {
 
 
 // 가운데 정렬인 정삼각형을 출력
-#include <stdio.h>
+/*#include <stdio.h>
 
 int main(void) {
     int n;
@@ -185,7 +185,7 @@ int main(void) {
     }
 
     return 0;
-}
+}*/
 
 
 // 삼각형 출력(최종)
