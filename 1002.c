@@ -46,12 +46,12 @@ int main(void) {
 int main(void) {
     puts("10진수를 기수 변환합니다.");
 
-    int retry;                                              // ?븳 踰? ?뜑?
+    int retry;                                              
 
     do{
-        unsigned no;                                        // 蹂??솚?븯?뒗 ?젙?닔
-        int      cd;                                        // 湲곗닔 
-        printf(("변환하는 음이 아닌 정수: "));                // 蹂??솚?븳 媛믪쓽 媛? ?옄由ъ쓽 ?닽?옄瑜? ????옣?븯?뒗 臾몄옄 諛곗뿴
+        unsigned no;                                        
+        int      cd;                                         
+        printf(("변환하는 음이 아닌 정수: "));                
         scanf("%u", &no);
 
         do{
@@ -147,7 +147,7 @@ int main(void) {
 
 
 // 한 해의 지난 날 수를 구하여 출력
-#include <stdio.h>
+/*#include <stdio.h>
 
 // 각 달의 날 수
 int mdays[][12] = {
@@ -172,12 +172,66 @@ int main(void) {
     int retry;                                                                      // 다시?
     do {
         int year, month, day;                                                       // 년, 월, 일
-        printf("?뀈: "); scanf("%d", &year);
-        printf("?썡: "); scanf("%d", &year);
-        printf("?씪: "); scanf("%d", &year);
-        printf("%d?뀈?쓽 %d?씪吏몄엯?땲?떎.\n: ", year, dayof_year(year, month, day));
-        printf("?떎?떆 ?븷源뚯슂?(1...?삁/0...?븘?땲?삤): "); scanf("%d", &retry);
+        printf("년: "); scanf("%d", &year);
+        printf("월: "); scanf("%d", &year);
+        printf("일: "); scanf("%d", &year);
+        printf("%d년의 %d일째입니다.\n: ", year, dayof_year(year, month, day));
+        printf("다시 할까요?(1...?예/0...아니오): "); scanf("%d", &retry);
     } while(retry == 1);
 
     return 0;
+}*/
+
+
+// 신체검사 데이터용 구조체 배열
+#include <stdio.h>
+#define VMAX 21
+
+    // 신체검사 데이터형
+typedef struct {
+    char   name[10];
+    int    height;
+    double vision;
+} PhysCheck;
+
+    // 키의 평균값
+double eve_height(const PhysCheck dat[], int n) {
+    double sum = 0;
+    for(int i = 0; i < n; i++)
+        sum += dat[i].height;
+    return sum / n;
+}
+
+    // 시력 분포
+void dist_vision(const PhysCheck dat[], int n, int dist[]) {
+    for(int i = 0; i < VMAX; i++)
+        dist[i] = 0;
+    for(int i = 0; i < n; i++)
+        if(dat[i].vision >= 0.0 && dat[i].vision <= VMAX/10.0)
+            dist[(int)(dat[i].vision * 10)]++;
+}
+
+int main(void) {
+    PhysCheck x[] = {
+        {"박현규", 162, 0.3},
+        {"함진아", 173, 0.7},
+        {"최윤미", 175, 2.0},
+        {"홍연의", 171, 1.5},
+        {"이수진", 168, 0.4},
+        {"김영준", 174, 1.2},
+        {"박용규", 169, 0.8}
+    };
+
+    int nx = sizeof(x) / sizeof(x[0]);
+    int vdist[VMAX];
+    puts("----- 신체검사표 -----");
+    puts("  이름    키  시력  ");
+    puts("-------------------");
+    for(int i = 0; i < nx; i++)
+        printf("%-18.18s%4d%5.1f\n", x[i].name, x[i].height, x[i].vision);
+    printf("\n 평균 키: %5.1f cm\n", eve_height(x, nx));
+    dist_vision(x, nx, vdist);
+    printf("\n 시력 분포 \n");
+    for(int i = 0; i < VMAX; i++)
+        printf("%3.1f ~: %2d 명\n", i/10.0, vdist[i]);
 }
