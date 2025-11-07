@@ -1,8 +1,14 @@
 // 202530212 박 세림
-
+// 11월 06일 강의
+// 10월 31일 강의
 // 10월 30일 강의
 
 // 스택
+// 초기화 함수
+// - 스태그이 메모리 공간(배열)을 확보하는 등의 준비 작업을 수행하는 함수
+// 1. 배열을 위한 메모리 공간을 만들 떄 스택은 비어 있어야(데이터가 하나도 쌓여 있지 않은 상태여야) 하므로 스택 포인터 ptr 값을 0으로 함.
+// 2. 요소의 개수가 max인 배열 stk를 생성함. 이때, 스택의 개별 요소에 접근하는 인덱스 식은 바닥(bottom)부터 stk[0], stk[1], ..., stk[max-1]이 됨.
+// 3. 매개변수 max로 받은 값을 스택 최대 용량을 나타내는 구조체의 멤버 max에 저장.
 /*#include <stdio.h>
 #include <stdlib.h>
 #include "IntStack.h"
@@ -387,7 +393,190 @@ int main(void) {
     puts("큐를 종료합니다.");
     
     return 0;
-}*/
+}
 
 
 // 버블 정렬
+#include <stdio.h>
+
+void bubble_sort(int arr[], int n) {
+    int i, j;
+    int temp; // 교환을 위한 임시 변수
+
+    // 바깥쪽 루프: 총 n-1 번의 '패스(Pass)'를 수행
+    for (i = 0; i < n - 1; i++) {
+        // 안쪽 루프: 인접한 원소들을 비교하고 교환
+        // i가 증가할수록 배열의 끝에는 정렬된 원소가 쌓이므로, 비교 범위가 줄어든다.
+        for (j = 0; j < n - 1 - i; j++) {
+            // 오름차순 정렬: 현재 원소가 다음 원소보다 크면 교환
+            if (arr[j] > arr[j + 1]) {
+                temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int data[] = { 64, 34, 25, 12, 22, 11, 90 };
+    int n = sizeof(data) / sizeof(data[0]); // 배열의 크기 계산
+
+    printf("--- 버블 정렬 (오름차순) ---\n");
+    
+    // 정렬 전 배열 출력
+    printf("정렬 전: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", data[i]);
+    }
+    printf("\n");
+
+    // 버블 정렬 함수 호출
+    bubble_sort(data, n);
+
+    // 정렬 후 배열 출력
+    printf("정렬 후: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", data[i]);
+    }
+    printf("\n");
+    
+    return 0;
+}
+
+// 단순 선택 정렬
+// 아직 정렬하지 않은 부분에서 값이 가장 작은 요소를 선택하고 아직 정렬하지 않은 부분의 첫 번째 요소와 교환
+void selection(int a[], int n) {
+    for(int i = 0; i <n - 1; i++) {
+        int min = i;
+        for(int j = i + 1; j < n; j++) {
+            if(a[j] < a[min])
+                min = j;
+        }
+        swap(a[i], a[min]);    
+    }
+}
+
+// 단순 삽입 정렬
+#include <stdio.h>
+#include <stdlib.h>
+
+// 단순 삽입 정렬 함수
+void intsertion(int a[], int n) {
+    for(int i = 1; i < n; i++) {
+        int tmp = a[i];
+        int j;
+        for(j = i; j > 0 && a[j - 1] > tmp; j--)
+            a[j] = a[j - 1];
+        a[j] = tmp;
+    }
+}
+
+int main(void) {
+    int nx;
+    puts("단순 삽입 정렬");
+    printf("요소 개수: ");
+    scanf("%d", &nx);
+    int *x = calloc(nx, sizeof(int));
+
+    for(int i = 0; i< nx; i++) {
+        printf("x[%d]: ", i);
+    scanf("%d", &x[i]);
+    }
+
+    intsertion(x, nx);
+
+    puts("오름차순으로 정렬했습니다.");
+    for(int i = 0; i < nx; i++)
+        printf("x[%d] = %d\n", i, x[i]);
+    
+    free(x);
+
+    return 0;
+}*/
+
+// 퀵 정렬
+#include <stdio.h>
+#include <stdlib.h> // calloc, free 함수를 사용하기 위해 필요
+
+// 퀵 정렬에서 두 원소의 위치를 교환하는 함수 (swap)
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// 파티션(Partition) 함수: 피벗을 기준으로 배열을 나누는 역할
+// L: 배열의 시작 인덱스, R: 배열의 끝 인덱스
+int partition(int arr[], int L, int R) {
+    int pivot = arr[R]; // 가장 오른쪽 원소를 피벗으로 선택
+    int i = L - 1; // 피벗보다 작은 요소들의 경계 (작은 요소가 들어갈 위치)
+
+    // L부터 R-1까지 순회하며 피벗과 비교
+    for (int j = L; j <= R - 1; j++) {
+        // 현재 원소가 피벗보다 작거나 같으면
+        if (arr[j] <= pivot) {
+            i++; // 경계를 증가시키고
+            swap(&arr[i], &arr[j]); // arr[j]를 작은 요소 영역으로 이동 (교환)
+        }
+    }
+    // 루프가 끝난 후, 피벗을 i+1 위치(작은 요소 영역 바로 다음)로 이동
+    swap(&arr[i + 1], &arr[R]);
+    
+    // 최종적으로 피벗이 위치한 인덱스를 반환
+    return (i + 1);
+}
+
+// 퀵 정렬 (quick) 함수
+// arr: 배열, L: 시작 인덱스, R: 끝 인덱스
+void quick(int arr[], int L, int R) {
+    if (L < R) { // 정렬할 원소가 2개 이상일 때만 수행
+        // 1. 파티션: 배열을 피벗을 기준으로 두 부분으로 나눔
+        int pivot_index = partition(arr, L, R);
+
+        // 2. 재귀 호출: 피벗의 왼쪽 부분 정렬
+        quick(arr, L, pivot_index - 1);
+
+        // 3. 재귀 호출: 피벗의 오른쪽 부분 정렬
+        quick(arr, pivot_index + 1, R);
+    }
+}
+
+// 이미지에 나타난 main 함수 구조를 따름
+int main(void) {
+    int nx;
+    
+    puts("퀵 정렬");
+    printf("요소의 개수 입력 : ");
+    scanf("%d", &nx); // nx: 요소의 개수
+
+    // nx 개의 정수형(int) 배열을 동적으로 할당 (calloc은 메모리를 0으로 초기화)
+    int *x = (int *)calloc(nx, sizeof(int));
+
+    // 사용자로부터 배열 요소 입력 받기
+    for (int i = 0; i < nx; i++) {
+        printf("x[%d] : ", i);
+        scanf("%d", &x[i]);
+    }
+
+    // 배열 x에 대해 퀵 정렬 수행
+    // quick(배열, 시작 인덱스, 끝 인덱스)
+    // 시작 인덱스: 0, 끝 인덱스: nx - 1
+    quick(x, 0, nx - 1); 
+
+    puts("오름차순으로 정렬했습니다.");
+    
+    // 정렬된 배열 출력
+    for (int i = 0; i < nx; i++) {
+        printf("x[%d] = %d\n", i, x[i]);
+    }
+
+    // 동적으로 할당된 메모리 해제
+    free(x); 
+    
+    return 0;
+}
+
+// 병합 정렬
+
+// 힙 정렬
