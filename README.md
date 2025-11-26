@@ -29,4 +29,4 @@
 # 외부링크
 [구글로 가기](https://google.com "구글 링크")
 
-![이미지](image/sekong.jpg )
+![이미지](./sekong.jpg )
